@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { LayoutDashboard, FileText, Users, Film, Megaphone, MessageSquare, LogOut, Menu, X } from 'lucide-react'
 import QueryProvider from '@/components/providers/QueryProvider'
 import { logout } from '@/lib/api'
+import { Toaster } from 'sonner'
 
 const navItems = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
@@ -49,6 +50,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <QueryProvider>
+      <Toaster position="top-right" richColors closeButton />
       <div className="min-h-screen flex bg-[#F5F5F5]">
         {/* Mobile overlay */}
         {sidebarOpen && (

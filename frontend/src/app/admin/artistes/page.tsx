@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { adminApi } from '@/lib/api'
 import { Plus, Pencil, Trash2 } from 'lucide-react'
+import { toast } from 'sonner'
 import type { Artist } from '@/types'
 
 export default function AdminArtistesPage() {
@@ -20,7 +21,8 @@ export default function AdminArtistesPage() {
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => adminApi.deleteArtist(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin-artists'] }),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-artists'] }); toast.success('Artiste supprimé') },
+    onError: () => toast.error('Erreur lors de la suppression'),
   })
 
   const handleDelete = (id: string) => {

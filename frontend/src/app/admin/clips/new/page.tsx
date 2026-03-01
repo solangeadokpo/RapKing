@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { useQuery, useMutation } from '@tanstack/react-query'
@@ -8,10 +7,10 @@ import { adminApi } from '@/lib/api'
 import Button from '@/components/ui/Button'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
+import { toast } from 'sonner'
 
 export default function NewClipPage() {
   const router = useRouter()
-  const [error, setError] = useState('')
 
   const { data: artistsData } = useQuery({
     queryKey: ['admin-artists-list'],
@@ -25,8 +24,8 @@ export default function NewClipPage() {
 
   const mutation = useMutation({
     mutationFn: (data: any) => adminApi.createClip(data),
-    onSuccess: () => router.push('/admin/clips'),
-    onError: (err: any) => setError(err?.response?.data?.message || 'Erreur'),
+    onSuccess: () => { toast.success('Clip ajouté'); router.push('/admin/clips') },
+    onError: (err: any) => toast.error(err?.response?.data?.message || 'Erreur lors de la création'),
   })
 
   return (
@@ -54,7 +53,6 @@ export default function NewClipPage() {
             ))}
           </select>
         </div>
-        {error && <p className="text-red-600 text-sm">{error}</p>}
         <Button type="submit" loading={isSubmitting}>Ajouter le clip</Button>
       </form>
     </div>

@@ -10,14 +10,12 @@ import Button from '@/components/ui/Button'
 import ImageUpload from '@/components/admin/ImageUpload'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
-import { useState } from 'react'
+import { toast } from 'sonner'
 
 export default function EditArticlePage() {
   const { id } = useParams<{ id: string }>()
   const router = useRouter()
   const queryClient = useQueryClient()
-  const [error, setError] = useState('')
-
   const { data, isLoading } = useQuery({
     queryKey: ['admin-article', id],
     queryFn: () => adminApi.getArticle(id),
@@ -66,9 +64,10 @@ export default function EditArticlePage() {
     mutationFn: (data: any) => adminApi.updateArticle(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-articles'] })
+      toast.success('Article mis à jour')
       router.push('/admin/articles')
     },
-    onError: (err: any) => setError(err?.response?.data?.message || 'Erreur'),
+    onError: (err: any) => toast.error(err?.response?.data?.message || 'Erreur lors de la mise à jour'),
   })
 
   const coverImage = watch('coverImage')
@@ -181,7 +180,6 @@ export default function EditArticlePage() {
           </div>
         </div>
 
-        {error && <p className="text-red-600 text-sm">{error}</p>}
       </form>
     </div>
   )

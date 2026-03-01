@@ -6,6 +6,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { adminApi } from '@/lib/api'
 import { Plus, Pencil, Trash2, Eye, EyeOff } from 'lucide-react'
 import { formatDate } from '@/lib/utils'
+import { toast } from 'sonner'
 import type { Article } from '@/types'
 
 export default function AdminArticlesPage() {
@@ -22,13 +23,15 @@ export default function AdminArticlesPage() {
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => adminApi.deleteArticle(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin-articles'] }),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-articles'] }); toast.success('Article supprimé') },
+    onError: () => toast.error('Erreur lors de la suppression'),
   })
 
   const togglePublish = useMutation({
     mutationFn: ({ id, published }: { id: string; published: boolean }) =>
       adminApi.updateArticle(id, { published }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin-articles'] }),
+    onSuccess: (_, { published }) => { queryClient.invalidateQueries({ queryKey: ['admin-articles'] }); toast.success(published ? 'Article publié' : 'Article mis en brouillon') },
+    onError: () => toast.error('Erreur lors de la mise à jour'),
   })
 
   const handleDelete = (id: string) => {

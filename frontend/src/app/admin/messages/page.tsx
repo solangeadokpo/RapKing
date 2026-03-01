@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { adminApi } from '@/lib/api'
 import { Mail, MailOpen } from 'lucide-react'
 import { formatDate } from '@/lib/utils'
+import { toast } from 'sonner'
 import type { ContactMessage } from '@/types'
 
 export default function AdminMessagesPage() {
@@ -21,7 +22,8 @@ export default function AdminMessagesPage() {
   const toggleMutation = useMutation({
     mutationFn: ({ id, isRead }: { id: string; isRead: boolean }) =>
       isRead ? adminApi.markMessageUnread(id) : adminApi.markMessageRead(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin-messages'] }),
+    onSuccess: (_, { isRead }) => { queryClient.invalidateQueries({ queryKey: ['admin-messages'] }); toast.success(isRead ? 'Marqué non lu' : 'Marqué comme lu') },
+    onError: () => toast.error('Erreur'),
   })
 
   return (

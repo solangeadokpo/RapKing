@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
@@ -9,13 +9,12 @@ import Button from '@/components/ui/Button'
 import ImageUpload from '@/components/admin/ImageUpload'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
+import { toast } from 'sonner'
 
 export default function EditArtistePage() {
   const { id } = useParams<{ id: string }>()
   const router = useRouter()
   const queryClient = useQueryClient()
-  const [error, setError] = useState('')
-
   const { data, isLoading } = useQuery({
     queryKey: ['admin-artist', id],
     queryFn: () => adminApi.getArtist(id),
@@ -45,9 +44,10 @@ export default function EditArtistePage() {
     mutationFn: (data: any) => adminApi.updateArtist(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-artists'] })
+      toast.success('Artiste mis à jour')
       router.push('/admin/artistes')
     },
-    onError: (err: any) => setError(err?.response?.data?.message || 'Erreur'),
+    onError: (err: any) => toast.error(err?.response?.data?.message || 'Erreur lors de la mise à jour'),
   })
 
   if (isLoading) {
@@ -79,7 +79,6 @@ export default function EditArtistePage() {
           <label className="block text-xs uppercase tracking-widest text-[#555555] mb-2">Biographie</label>
           <textarea {...register('bio')} rows={4} className="w-full border border-[#CCCCCC] px-3 py-2.5 text-sm focus:border-black outline-none resize-none" />
         </div>
-        {error && <p className="text-red-600 text-sm">{error}</p>}
         <Button type="submit" loading={isSubmitting}>Enregistrer</Button>
       </form>
     </div>

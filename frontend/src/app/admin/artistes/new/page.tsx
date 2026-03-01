@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { useMutation } from '@tanstack/react-query'
@@ -9,11 +8,10 @@ import Button from '@/components/ui/Button'
 import ImageUpload from '@/components/admin/ImageUpload'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
+import { toast } from 'sonner'
 
 export default function NewArtistePage() {
   const router = useRouter()
-  const [error, setError] = useState('')
-
   const { register, handleSubmit, watch, setValue, formState: { isSubmitting } } = useForm({
     defaultValues: { name: '', photo: '', country: '', bio: '' },
   })
@@ -22,8 +20,8 @@ export default function NewArtistePage() {
 
   const mutation = useMutation({
     mutationFn: (data: any) => adminApi.createArtist(data),
-    onSuccess: () => router.push('/admin/artistes'),
-    onError: (err: any) => setError(err?.response?.data?.message || 'Erreur'),
+    onSuccess: () => { toast.success('Artiste créé'); router.push('/admin/artistes') },
+    onError: (err: any) => toast.error(err?.response?.data?.message || 'Erreur lors de la création'),
   })
 
   return (
@@ -51,7 +49,6 @@ export default function NewArtistePage() {
           <label className="block text-xs uppercase tracking-widest text-[#555555] mb-2">Biographie</label>
           <textarea {...register('bio')} rows={4} className="w-full border border-[#CCCCCC] px-3 py-2.5 text-sm focus:border-black outline-none resize-none" />
         </div>
-        {error && <p className="text-red-600 text-sm">{error}</p>}
         <Button type="submit" loading={isSubmitting}>Créer l'artiste</Button>
       </form>
     </div>

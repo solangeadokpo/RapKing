@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm, Controller } from 'react-hook-form'
 import { useQuery, useMutation } from '@tanstack/react-query'
@@ -10,11 +9,10 @@ import Button from '@/components/ui/Button'
 import ImageUpload from '@/components/admin/ImageUpload'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
+import { toast } from 'sonner'
 
 export default function NewArticlePage() {
   const router = useRouter()
-  const [error, setError] = useState('')
-
   const { data: artistsData } = useQuery({
     queryKey: ['admin-artists-list'],
     queryFn: () => adminApi.getArtists({ limit: 100 }),
@@ -37,8 +35,8 @@ export default function NewArticlePage() {
 
   const mutation = useMutation({
     mutationFn: (data: any) => adminApi.createArticle(data),
-    onSuccess: () => router.push('/admin/articles'),
-    onError: (err: any) => setError(err?.response?.data?.message || 'Erreur'),
+    onSuccess: () => { toast.success('Article créé'); router.push('/admin/articles') },
+    onError: (err: any) => toast.error(err?.response?.data?.message || 'Erreur lors de la création'),
   })
 
   const coverImage = watch('coverImage')
@@ -147,7 +145,6 @@ export default function NewArticlePage() {
           </div>
         </div>
 
-        {error && <p className="text-red-600 text-sm">{error}</p>}
       </form>
     </div>
   )

@@ -6,6 +6,7 @@ import { adminApi } from '@/lib/api'
 import { Plus, Trash2, Eye, EyeOff, Pencil, X } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import ImageUpload from '@/components/admin/ImageUpload'
+import { toast } from 'sonner'
 import type { Advertisement } from '@/types'
 
 const emptyForm = { name: '', type: 'image', imageUrl: '', linkUrl: '', scriptCode: '', isActive: false }
@@ -16,7 +17,6 @@ export default function AdminPublicitesPage() {
   const [createForm, setCreateForm] = useState({ ...emptyForm })
   const [editingAd, setEditingAd] = useState<Advertisement | null>(null)
   const [editForm, setEditForm] = useState({ ...emptyForm })
-  const [error, setError] = useState('')
 
   const { data, isLoading } = useQuery({
     queryKey: ['admin-ads'],
@@ -27,12 +27,14 @@ export default function AdminPublicitesPage() {
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => adminApi.deleteAd(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin-ads'] }),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-ads'] }); toast.success('Publicité supprimée') },
+    onError: () => toast.error('Erreur lors de la suppression'),
   })
 
   const toggleMutation = useMutation({
     mutationFn: ({ id, isActive }: { id: string; isActive: boolean }) => adminApi.updateAd(id, { isActive }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin-ads'] }),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-ads'] }); toast.success('Statut mis à jour') },
+    onError: () => toast.error('Erreur'),
   })
 
   const createMutation = useMutation({
@@ -41,9 +43,9 @@ export default function AdminPublicitesPage() {
       queryClient.invalidateQueries({ queryKey: ['admin-ads'] })
       setShowCreateForm(false)
       setCreateForm({ ...emptyForm })
-      setError('')
+      toast.success('Publicité créée')
     },
-    onError: (err: any) => setError(err?.response?.data?.message || 'Erreur'),
+    onError: (err: any) => toast.error(err?.response?.data?.message || 'Erreur lors de la création'),
   })
 
   const updateMutation = useMutation({
@@ -51,9 +53,9 @@ export default function AdminPublicitesPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-ads'] })
       setEditingAd(null)
-      setError('')
+      toast.success('Publicité mise à jour')
     },
-    onError: (err: any) => setError(err?.response?.data?.message || 'Erreur'),
+    onError: (err: any) => toast.error(err?.response?.data?.message || 'Erreur lors de la mise à jour'),
   })
 
   const openEdit = (ad: Advertisement) => {
@@ -67,7 +69,6 @@ export default function AdminPublicitesPage() {
       isActive: ad.isActive,
     })
     setShowCreateForm(false)
-    setError('')
   }
 
   const AdForm = ({
@@ -153,7 +154,6 @@ export default function AdminPublicitesPage() {
         />
         <label htmlFor={`isActive-${title}`} className="text-sm">Actif</label>
       </div>
-      {error && <p className="text-red-600 text-sm mt-2">{error}</p>}
       <div className="flex gap-3 mt-4">
         <Button onClick={onSubmit} loading={isPending}>{submitLabel}</Button>
         <button onClick={onCancel} className="text-sm text-[#555555] hover:text-black">Annuler</button>
@@ -166,7 +166,7 @@ export default function AdminPublicitesPage() {
       <div className="flex items-center justify-between mb-6">
         <h1 className="font-bebas text-4xl">Publicités</h1>
         <button
-          onClick={() => { setShowCreateForm(!showCreateForm); setEditingAd(null); setError('') }}
+          onClick={() => { setShowCreateForm(!showCreateForm); setEditingAd(null) }}
           className="inline-flex items-center gap-2 bg-black text-white px-4 py-2 text-sm uppercase tracking-wide hover:bg-[#1A1A1A] transition-colors"
         >
           <Plus size={14} /> Nouvelle pub
@@ -179,7 +179,7 @@ export default function AdminPublicitesPage() {
           setForm={setCreateForm}
           onSubmit={() => createMutation.mutate(createForm)}
           isPending={createMutation.isPending}
-          onCancel={() => { setShowCreateForm(false); setError('') }}
+          onCancel={() => setShowCreateForm(false)}
           title="Nouvelle publicité"
           submitLabel="Créer"
         />
@@ -191,7 +191,7 @@ export default function AdminPublicitesPage() {
           setForm={setEditForm}
           onSubmit={() => updateMutation.mutate({ id: editingAd.id, payload: editForm })}
           isPending={updateMutation.isPending}
-          onCancel={() => { setEditingAd(null); setError('') }}
+          onCancel={() => setEditingAd(null)}
           title={`Modifier — ${editingAd.name}`}
           submitLabel="Enregistrer"
         />

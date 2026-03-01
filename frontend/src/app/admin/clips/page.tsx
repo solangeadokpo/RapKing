@@ -6,6 +6,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { adminApi } from '@/lib/api'
 import { Plus, Pencil, Trash2 } from 'lucide-react'
 import { extractYoutubeThumb, formatDate } from '@/lib/utils'
+import { toast } from 'sonner'
 import type { Clip } from '@/types'
 
 export default function AdminClipsPage() {
@@ -20,7 +21,8 @@ export default function AdminClipsPage() {
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => adminApi.deleteClip(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin-clips'] }),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin-clips'] }); toast.success('Clip supprimé') },
+    onError: () => toast.error('Erreur lors de la suppression'),
   })
 
   return (
