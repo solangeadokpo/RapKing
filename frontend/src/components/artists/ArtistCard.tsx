@@ -10,7 +10,7 @@ interface ArtistCardProps {
 export default function ArtistCard({ artist, lang }: ArtistCardProps) {
   return (
     <Link href={`/${lang}/artistes/${artist.slug}`} className="group block text-center">
-      <div className="relative w-full ratio-1-1 bg-[#F5F5F5] overflow-hidden mb-3">
+      <div className="relative w-full ratio-1-1 bg-[#F5F5F5] overflow-hidden mb-3 rounded-xl">
         {artist.photo ? (
           <Image
             src={artist.photo}

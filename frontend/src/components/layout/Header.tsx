@@ -1,10 +1,12 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
-import { Search, Menu, X } from 'lucide-react'
+import { Search, Menu, X, Sun, Moon } from 'lucide-react'
 import SearchBar from '@/components/search/SearchBar'
+import { useTheme } from '@/components/providers/ThemeProvider'
 
 interface HeaderProps {
   lang: string
@@ -14,6 +16,7 @@ export default function Header({ lang }: HeaderProps) {
   const t = useTranslations('nav')
   const [mobileOpen, setMobileOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
+  const { theme, toggle } = useTheme()
 
   const navLinks = [
     { href: `/${lang}`, label: t('home') },
@@ -28,8 +31,8 @@ export default function Header({ lang }: HeaderProps) {
       <div className="max-w-[1200px] mx-auto px-4 md:px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href={`/${lang}`} className="font-bebas text-3xl tracking-widest text-black">
-            RAPKING
+          <Link href={`/${lang}`} className="flex items-center h-10">
+            <Image src="/logo.png" alt="RapKing" width={80} height={40} className="h-10 w-auto object-contain" priority />
           </Link>
 
           {/* Desktop nav */}
@@ -63,6 +66,15 @@ export default function Header({ lang }: HeaderProps) {
                 EN
               </Link>
             </div>
+
+            {/* Theme toggle */}
+            <button
+              onClick={toggle}
+              className="p-2 text-[#555555] hover:text-black transition-colors"
+              aria-label="Changer le thème"
+            >
+              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
 
             {/* Search toggle */}
             <button

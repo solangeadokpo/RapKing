@@ -13,7 +13,7 @@ export default function ClipCard({ clip, lang }: ClipCardProps) {
   return (
     
     <Link href={`/${lang}/clips/${clip.slug}`} className="group block">
-      <div className="relative ratio-16-9 overflow-hidden bg-[#F5F5F5] mb-3">
+      <div className="relative ratio-16-9 overflow-hidden bg-[#F5F5F5] mb-3 rounded-xl">
         <Image
           src={extractYoutubeThumb(clip.youtubeId, 'hq')}
           alt={clip.title}
@@ -30,7 +30,7 @@ export default function ClipCard({ clip, lang }: ClipCardProps) {
       <h3 className="font-bebas text-lg text-[#1A1A1A] leading-tight group-hover:opacity-70 transition-opacity">
         {clip.title}
       </h3>
-      <p className="text-xs text-[#555555] uppercase tracking-wide mt-1">{clip.artist.name}</p>
+      {clip.artist && <p className="text-xs text-[#555555] uppercase tracking-wide mt-1">{clip.artist.name}</p>}
       <p className="text-xs text-[#555555] mt-0.5">{formatDate(clip.publishedAt, lang)}</p>
     </Link>
   )

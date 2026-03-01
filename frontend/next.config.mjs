@@ -39,7 +39,7 @@ const nextConfig = {
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: blob: https: http:",
               "frame-src https://www.youtube.com https://www.youtube-nocookie.com",
-              "connect-src 'self' http://localhost:3001 https://api.rapking.com",
+              `connect-src 'self' http://localhost:3001 https://api.rapking.com ${process.env.NEXT_PUBLIC_API_URL || ''}`.trim(),
               "media-src 'self' https://www.youtube.com",
             ].join('; '),
           },

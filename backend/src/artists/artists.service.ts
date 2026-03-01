@@ -42,10 +42,12 @@ export class ArtistsService {
           where: { published: true },
           orderBy: { publishedAt: 'desc' },
           take: 10,
+          include: { artist: true },
         },
         clips: {
           orderBy: { publishedAt: 'desc' },
           take: 10,
+          include: { artist: true },
         },
       },
     });

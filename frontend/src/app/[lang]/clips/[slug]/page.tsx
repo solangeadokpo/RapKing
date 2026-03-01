@@ -18,9 +18,9 @@ export async function generateMetadata({ params: { lang, slug } }: ClipPageProps
     const clip = res.data
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://rapking.com'
     return {
-      title: `${clip.title} — ${clip.artist.name} — RapKing`,
+      title: `${clip.title}${clip.artist ? ` — ${clip.artist.name}` : ''} — RapKing`,
       openGraph: {
-        title: `${clip.title} — ${clip.artist.name}`,
+        title: `${clip.title}${clip.artist ? ` — ${clip.artist.name}` : ''}`,
         type: 'video.other',
         url: `${siteUrl}/${lang}/clips/${slug}`,
         images: [`https://img.youtube.com/vi/${clip.youtubeId}/maxresdefault.jpg`],
@@ -50,7 +50,7 @@ export default async function ClipPage({ params: { lang, slug } }: ClipPageProps
     '@context': 'https://schema.org',
     '@type': 'VideoObject',
     name: clip.title,
-    description: `${clip.title} par ${clip.artist.name}`,
+    description: `${clip.title}${clip.artist ? ` par ${clip.artist.name}` : ''}`,
     thumbnailUrl: `https://img.youtube.com/vi/${clip.youtubeId}/maxresdefault.jpg`,
     uploadDate: clip.publishedAt,
     embedUrl: `https://www.youtube.com/embed/${clip.youtubeId}`,
@@ -81,12 +81,14 @@ export default async function ClipPage({ params: { lang, slug } }: ClipPageProps
         {/* Info */}
         <h1 className="font-bebas text-4xl md:text-5xl leading-none text-black mb-2">{clip.title}</h1>
         <div className="flex items-center gap-4 mt-3">
-          <Link
-            href={`/${lang}/artistes/${clip.artist.slug}`}
-            className="text-xs uppercase tracking-widest text-[#555555] hover:text-black transition-colors font-semibold"
-          >
-            {clip.artist.name}
-          </Link>
+          {clip.artist && (
+            <Link
+              href={`/${lang}/artistes/${clip.artist.slug}`}
+              className="text-xs uppercase tracking-widest text-[#555555] hover:text-black transition-colors font-semibold"
+            >
+              {clip.artist.name}
+            </Link>
+          )}
           <span className="text-[#CCCCCC]">·</span>
           <span className="text-xs text-[#555555]">{formatDate(clip.publishedAt, lang)}</span>
           <span className="text-[#CCCCCC]">·</span>

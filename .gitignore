@@ -37,8 +37,7 @@ Thumbs.db
 *.swp
 *.swo
 
-# Prisma
-backend/src/prisma/migrations/
+# Prisma (migrations must be committed for production deploys)
 
 # Uploads temp
 backend/uploads/

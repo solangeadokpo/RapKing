@@ -17,7 +17,7 @@ export default function ArticleCard({ article, lang, variant = 'default' }: Arti
   if (variant === 'featured') {
     return (
       <Link href={`/${lang}/articles/${article.slug}`} className="group block">
-        <div className="relative ratio-16-9 overflow-hidden bg-[#F5F5F5]">
+        <div className="relative ratio-16-9 overflow-hidden bg-[#F5F5F5] rounded-xl">
           {article.coverImage ? (
             <Image
               src={article.coverImage}
@@ -67,7 +67,7 @@ export default function ArticleCard({ article, lang, variant = 'default' }: Arti
 
   return (
     <Link href={`/${lang}/articles/${article.slug}`} className="group block">
-      <div className="relative ratio-16-9 overflow-hidden bg-[#F5F5F5] mb-4">
+      <div className="relative ratio-16-9 overflow-hidden bg-[#F5F5F5] mb-4 rounded-xl">
         {article.coverImage ? (
           <Image
             src={article.coverImage}
