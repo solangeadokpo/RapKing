@@ -29,7 +29,7 @@ body {
   background-color: var(--color-secondary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.08em;
 }
 
 /* Dark mode */
@@ -53,13 +53,13 @@ body {
 
 h1, h2, h3 {
   font-family: var(--font-articulat-eb);
-  letter-spacing: -0.04em;
+  letter-spacing: -0.06em;
   line-height: 1.05;
 }
 
 h4, h5, h6 {
   font-family: var(--font-articulat);
-  letter-spacing: -0.05em;
+  letter-spacing: -0.08em;
 }
 
 /* Article content styles */
