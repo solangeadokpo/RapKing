@@ -31,8 +31,8 @@ export default function Header({ lang }: HeaderProps) {
       <div className="max-w-[1200px] mx-auto px-4 md:px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href={`/${lang}`} className="flex items-center h-12">
-            <Image src="/logo.png" alt="RapKing" width={140} height={56} className="h-12 w-auto object-contain invert dark:invert-0" priority />
+          <Link href={`/${lang}`} className="flex items-center h-14">
+            <Image src="/logo.png" alt="RapKing" width={180} height={70} className="h-14 w-auto object-contain invert dark:invert-0" priority />
           </Link>
 
           {/* Desktop nav */}
